@@ -1,0 +1,278 @@
+{
+  "video": "clipA.mp4",
+  "video_info": {
+    "path": "/kaggle/working/videos/clipA.mp4",
+    "width": 496,
+    "height": 368,
+    "fps_nominal": 36.015395277794596,
+    "fps_avg": 36.015395277794596,
+    "frame_count": 2141,
+    "duration_s": 59.4468,
+    "is_vfr": false
+  },
+  "frames_processed": 2141,
+  "stride": 1,
+  "timing": {
+    "processing_fps": 22.4,
+    "end_to_end_fps_pass1": 3.56,
+    "processing_fps_with_scene": 14.12,
+    "processing_fps_all_models": 3.67,
+    "pass1_wall_s": 601.814,
+    "stages": {
+      "detect": {
+        "total_s": 35.4794,
+        "ms_per_frame": 16.571
+      },
+      "road_filter": {
+        "total_s": 41.2022,
+        "ms_per_frame": 19.244
+      },
+      "track": {
+        "total_s": 18.8881,
+        "ms_per_frame": 8.822
+      },
+      "scene_detect": {
+        "total_s": 35.7941,
+        "ms_per_frame": 16.718
+      },
+      "scene_track": {
+        "total_s": 20.2846,
+        "ms_per_frame": 9.474
+      },
+      "surface": {
+        "total_s": 41.6427,
+        "ms_per_frame": 19.45
+      },
+      "openvocab": {
+        "total_s": 353.4404,
+        "ms_per_frame": 165.082
+      },
+      "odometry": {
+        "total_s": 37.1832,
+        "ms_per_frame": 17.367
+      }
+    },
+    "note": "processing_fps = defect detector + road filter + tracking only (decode/render/export excluded); processing_fps_all_models adds the scene detector, surface segmentation, open-vocabulary detector and visual odometry; end_to_end_fps_pass1 additionally includes decode/Python overhead",
+    "render_export_s": 53.866
+  },
+  "tracking": {
+    "raw_tracks": 53,
+    "after_merge": 45,
+    "reported": 34,
+    "dropped_short_or_low_conf": 11
+  },
+  "scene_tracking": {
+    "raw_tracks": 187,
+    "after_merge": 95,
+    "reported": 62,
+    "dropped_short_or_low_conf": 33
+  },
+  "road_filter": {
+    "frames": 2141,
+    "frames_mask_failed": 0,
+    "detections_in": 1705,
+    "detections_dropped_off_road": 6
+  },
+  "road_surface": {
+    "duration_s": 59.47,
+    "surface_overall": "paved",
+    "surface_time_share_pct": {
+      "paved": 100.0,
+      "mixed": 0.0,
+      "unpaved": 0.0
+    },
+    "sidewalk_time_share_pct": {
+      "none": 44.3,
+      "left": 3.5,
+      "right": 31.3,
+      "both": 20.9
+    },
+    "sidewalk_present_pct": 55.7,
+    "mean_unpaved_ratio": 0.013,
+    "mean_standing_water_pct_of_roi": 0.08,
+    "horizon_y_px": 192.0,
+    "findings": [
+      "Road is predominantly paved (100.0% of the route).",
+      "Sidewalk present on at least one side for 55.7% of the route."
+    ],
+    "n_segments": 11,
+    "method": "nvidia/segformer-b0-finetuned-ade-512-512 (ADE20K), region of interest = below horizon, smoothed over 1.5s"
+  },
+  "odometry": {
+    "assumed_camera_height_m": 1.4,
+    "assumed_hfov_deg": 75.0,
+    "horizon_row_px": 192.0,
+    "route_length_m_approx": 404.1,
+    "mean_speed_kmh_approx": 24.6,
+    "max_speed_kmh_approx": 68.3,
+    "frames_with_valid_motion": 2138,
+    "frames_total": 2141,
+    "net_heading_change_deg": -189.7,
+    "note": "monocular, scale from an assumed camera height: treat distances/speeds as rough estimates"
+  },
+  "hardware": {
+    "platform": "Linux-6.18.48+-x86_64-with-glibc2.39",
+    "python": "3.13.15",
+    "cpu": "Intel(R) Xeon(R) CPU @ 2.00GHz",
+    "cpu_logical_cores": 4,
+    "ram_gb": 31.3,
+    "gpus": [
+      {
+        "index": 0,
+        "name": "Tesla T4",
+        "memory_gb": 15.6
+      },
+      {
+        "index": 1,
+        "name": "Tesla T4",
+        "memory_gb": 15.6
+      }
+    ],
+    "torch": "2.11.0+cu128",
+    "cuda_available": true,
+    "cuda": "12.8",
+    "ultralytics": "8.4.177",
+    "transformers": "5.16.1",
+    "cv2": "4.14.0"
+  },
+  "config": {
+    "detect": {
+      "backend": "ultralytics",
+      "weights": "/kaggle/input/notebooks/joeshwoageorge/notebook2a085ffb44/weights/yolo26s_rdd_v2.pt",
+      "imgsz": 800,
+      "conf": 0.15,
+      "iou": 0.6,
+      "device": "auto",
+      "half": true,
+      "max_det": 150,
+      "classes": null,
+      "tile_size": 0,
+      "tile_overlap": 0.25,
+      "rfdetr_variant": "small",
+      "rfdetr_resolution": 640
+    },
+    "road": {
+      "enabled": true,
+      "model_id": "nvidia/segformer-b0-finetuned-cityscapes-512-1024",
+      "every_n": 3,
+      "min_overlap": 0.25,
+      "dilate_px": 21,
+      "min_road_fraction": 0.04,
+      "input_width": 1024
+    },
+    "track": {
+      "tracker": "botsort",
+      "track_high_thresh": 0.3,
+      "track_low_thresh": 0.1,
+      "new_track_thresh": 0.35,
+      "track_buffer": 45,
+      "match_thresh": 0.8,
+      "gmc_method": "sparseOptFlow",
+      "with_reid": false
+    },
+    "merge": {
+      "enabled": true,
+      "max_gap_frames": 40,
+      "iou_thr": 0.2,
+      "dist_factor": 0.6,
+      "size_ratio": 2.5,
+      "dup_iou": 0.5,
+      "dup_frac": 0.5,
+      "compatible_classes": []
+    },
+    "report": {
+      "min_observations": 3,
+      "min_max_conf": 0.4,
+      "class_min_conf": {
+        "4": 0.5,
+        "5": 0.24
+      },
+      "class_min_obs": {
+        "4": 3,
+        "5": 2
+      }
+    },
+    "sam": {
+      "enabled": true,
+      "weights": "sam2.1_b.pt"
+    },
+    "scene": {
+      "enabled": true,
+      "weights": "yolo26s.pt",
+      "imgsz": 640,
+      "conf": 0.3,
+      "classes": [
+        0,
+        1,
+        2,
+        3,
+        5,
+        7,
+        9,
+        11
+      ],
+      "min_observations": 5,
+      "min_max_conf": 0.45,
+      "compatible_classes": [
+        [
+          2,
+          5,
+          7
+        ]
+      ]
+    },
+    "surface": {
+      "enabled": true,
+      "model_id": "nvidia/segformer-b0-finetuned-ade-512-512",
+      "every_n": 2,
+      "input_width": 672,
+      "roi_top_margin": 0.03,
+      "water_detect": true,
+      "water_min_area_frac": 0.0005,
+      "water_max_area_frac": 0.2,
+      "bright_puddles": true,
+      "sidewalk_min_frac": 0.008,
+      "smooth_s": 1.5,
+      "min_segment_s": 2.0,
+      "unpaved_thr": 0.6,
+      "paved_thr": 0.25,
+      "tint": true
+    },
+    "odometry": {
+      "enabled": true,
+      "hfov_deg": 75.0,
+      "cam_height_m": 1.4,
+      "horizon_frac": 0.0,
+      "map_inset": true
+    },
+    "openvocab": {
+      "enabled": true,
+      "model_id": "google/owlv2-base-patch16-ensemble",
+      "prompts": {
+        "a manhole cover": 5,
+        "a storm drain grate": 5
+      },
+      "every_n": 3,
+      "conf": 0.16,
+      "max_area_frac": 0.04
+    },
+    "render": {
+      "enabled": true,
+      "thickness": 2,
+      "font_scale": 0.5,
+      "hud": true,
+      "encode_h264": true,
+      "crf": 20
+    },
+    "stride": 1,
+    "max_frames": 0
+  },
+  "class_names": {
+    "0": "longitudinal_crack",
+    "1": "transverse_crack",
+    "2": "alligator_crack",
+    "3": "pothole",
+    "4": "water_filled_pothole",
+    "5": "manhole_or_drain"
+  }
+}

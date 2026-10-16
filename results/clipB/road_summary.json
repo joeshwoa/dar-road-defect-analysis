@@ -1,0 +1,63 @@
+{
+  "summary": {
+    "duration_s": 15.04,
+    "surface_overall": "unpaved",
+    "surface_time_share_pct": {
+      "paved": 0.0,
+      "mixed": 0.0,
+      "unpaved": 100.0
+    },
+    "sidewalk_time_share_pct": {
+      "none": 100.0,
+      "left": 0.0,
+      "right": 0.0,
+      "both": 0.0
+    },
+    "sidewalk_present_pct": 0.0,
+    "mean_unpaved_ratio": 0.996,
+    "mean_standing_water_pct_of_roi": 20.04,
+    "horizon_y_px": 69.0,
+    "findings": [
+      "Road is predominantly UNPAVED / not properly surfaced (100.0% unpaved, 0.0% mixed).",
+      "NO sidewalk along 100.0% of the route - missing pedestrian infrastructure.",
+      "Standing water covers on average 20.0% of the road area.",
+      "No lane markings were visible on this route.",
+      "Road furniture seen: 0 sign(s), 0 traffic light(s), 0 crosswalk(s); 0 flagged as a possible problem."
+    ],
+    "n_segments": 1,
+    "method": "nvidia/segformer-b0-finetuned-ade-512-512 (ADE20K), region of interest = below horizon, causal (past-only) smoothing 1.5s + hysteresis, state change dwell 1.5s",
+    "defects_total_on_unpaved_or_mixed": 95
+  },
+  "odometry": {
+    "assumed_camera_height_m": 1.4,
+    "assumed_hfov_deg": 75.0,
+    "horizon_row_px": 69.0,
+    "route_length_m_approx": 28.5,
+    "mean_speed_kmh_approx": 6.8,
+    "max_speed_kmh_approx": 10.0,
+    "frames_with_valid_motion": 374,
+    "frames_total": 375,
+    "net_heading_change_deg": -0.8,
+    "note": "monocular, scale from an assumed camera height: treat distances/speeds as rough estimates"
+  },
+  "segments": [
+    {
+      "segment_id": 1,
+      "start_s": 0.0,
+      "end_s": 15.04,
+      "duration_s": 15.04,
+      "surface": "unpaved",
+      "sidewalk": "none",
+      "unpaved_pct": 99.6,
+      "paved_pct_of_roi": 0.3,
+      "unpaved_pct_of_roi": 72.1,
+      "standing_water_pct_of_roi": 20.04,
+      "sidewalk_left_pct": 0.0,
+      "sidewalk_right_pct": 0.0,
+      "distance_start_m_approx": 0.0,
+      "distance_end_m_approx": 28.5,
+      "defects_total": 95,
+      "defects_by_type": "alligator_crack:1;pothole:27;water_filled_pothole:67"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+# Core (pinned: the tracker API used in roadscan/tracking.py is version-sensitive)
+ultralytics==8.4.177
+opencv-python-headless>=4.9
+numpy>=1.26
+pandas>=2.0
+pyyaml>=6.0
+scipy>=1.11
+lapx>=0.5.10
+
+# Road-surface segmentation (SegFormer, Cityscapes)
+transformers>=4.44
+
+# Optional challenger detector (Apache-2.0)
+rfdetr[train,loggers]>=1.11
+
+# Figures / galleries (scripts/make_figures.py, make_gallery.py)
+matplotlib>=3.8
+pillow>=10.0
+
+# Tests
+pytest>=8.0

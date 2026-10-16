@@ -1,0 +1,11 @@
+{
+  "marking": {
+    "updates": 94,
+    "updates_with_visible_markings": 0,
+    "markings_visible_pct": 0.0,
+    "episodes_worn": 0,
+    "episodes": [],
+    "method": "paint contrast + segmenter confidence vs a causal running reference of this video; heuristic, not a calibrated pavement-marking retroreflectivity measurement"
+  },
+  "items": []
+}

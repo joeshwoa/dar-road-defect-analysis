@@ -1,0 +1,71 @@
+# Default configuration. Every key can be overridden on the CLI: --set detect.conf=0.3
+detect:
+  backend: ultralytics          # ultralytics | rfdetr
+  weights: weights/yolo26s_rdd.pt
+  imgsz: 640
+  conf: 0.20                    # low on purpose; tracker and report filter decide what survives
+  iou: 0.60
+  device: auto
+  half: true
+  tile_size: 0                  # e.g. 480 enables sliced inference for thin/small cracks (slower)
+  tile_overlap: 0.25
+  enhance: auto                 # off | clahe | auto: ensemble with a CLAHE-enhanced copy (auto = dark frames only)
+  enhance_lum_thr: 125
+
+road:
+  enabled: true
+  model_id: nvidia/segformer-b0-finetuned-cityscapes-512-1024
+  every_n: 3
+  min_overlap: 0.25
+  dilate_px: 21
+
+track:
+  tracker: botsort              # botsort (camera-motion compensation) | bytetrack
+  track_high_thresh: 0.30
+  track_low_thresh: 0.10
+  new_track_thresh: 0.35        # higher = fewer spurious new tracks (fewer double counts)
+  track_buffer: 45
+  match_thresh: 0.80
+  gmc_method: sparseOptFlow
+
+merge:
+  enabled: true
+  max_gap_frames: 40
+  iou_thr: 0.20
+  dist_factor: 0.60
+  size_ratio: 2.5
+  dup_iou: 0.50
+  dup_frac: 0.50
+  compatible_classes: [[0, 1, 2]]   # crack subtypes may flip between frames; potholes stay separate
+
+report:
+  min_observations: 3
+  min_max_conf: 0.40
+
+sam:
+  enabled: false
+  weights: sam2.1_b.pt
+
+render:
+  enabled: true
+  hud: true
+  encode_h264: true
+  legend: true
+  hold_frames: 8                # a box coasts this many frames after a missed detection
+  tint_water: false
+  marking_overlay: all          # off | worn | all (green = fine, red = worn)
+  missing_marking_s: 3.0
+  furniture_labels: flagged     # none | flagged | all
+
+stride: 1
+max_frames: 0
+
+temporal:                       # past-only stability layer
+  enabled: true
+  speed_median_s: 1.6
+  speed_ema: 0.2
+  max_accel_ms2: 2.5
+  max_decel_ms2: 4.5
+
+furniture:                      # markings / signs / traffic lights (also: --furniture)
+  enabled: false

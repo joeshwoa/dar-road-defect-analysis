@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+outputs/
+runs/
+weights/*.pth
+weights/*.engine
+*.onnx
+*.engine
+# the confidential INPUT videos must never be committed
+videos/
+WhatsApp*.mp4
+# annotated outputs are kept (they ARE the deliverable) - keep this repository PRIVATE
+!results/**/annotated.mp4
+.DS_Store
