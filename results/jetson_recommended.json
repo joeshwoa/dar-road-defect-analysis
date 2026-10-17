@@ -1,0 +1,7 @@
+{
+  "profile": "jetson_10fps",
+  "rule_met": false,
+  "worst_clip_recall": 0.208,
+  "worst_clip_precision": 0.982,
+  "rule": "cheapest frame-rate cap with recall >= 90% and precision >= 90% on both clips"
+}

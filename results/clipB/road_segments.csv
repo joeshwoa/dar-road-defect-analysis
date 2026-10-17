@@ -1,2 +1,2 @@
 segment_id,start_s,end_s,duration_s,surface,sidewalk,unpaved_pct,paved_pct_of_roi,unpaved_pct_of_roi,standing_water_pct_of_roi,sidewalk_left_pct,sidewalk_right_pct,distance_start_m_approx,distance_end_m_approx,defects_total,defects_by_type
-1,0.0,15.04,15.04,unpaved,none,99.6,0.3,72.1,20.04,0.0,0.0,0.0,28.5,95,alligator_crack:1;pothole:27;water_filled_pothole:67
+1,0.0,15.04,15.04,unpaved,none,99.6,0.3,72.1,20.04,0.0,0.0,0.0,24.4,102,alligator_crack:3;pothole:38;water_filled_pothole:61

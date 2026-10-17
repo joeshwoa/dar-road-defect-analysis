@@ -11,66 +11,72 @@
     "is_vfr": false
   },
   "frames_processed": 375,
+  "analysis_rate": {
+    "video_fps": 25.0,
+    "stride": 1,
+    "analysis_fps": 25.0,
+    "target_fps": 0.0
+  },
   "stride": 1,
   "timing": {
-    "processing_fps": 26.33,
-    "end_to_end_fps_pass1": 2.69,
-    "processing_fps_with_scene": 14.59,
-    "processing_fps_all_models": 2.77,
-    "pass1_wall_s": 139.546,
+    "processing_fps": 17.61,
+    "end_to_end_fps_pass1": 2.56,
+    "processing_fps_with_scene": 9.44,
+    "processing_fps_all_models": 2.63,
+    "pass1_wall_s": 146.63,
     "stages": {
       "detect": {
-        "total_s": 5.9537,
-        "ms_per_frame": 15.877
+        "total_s": 13.2346,
+        "ms_per_frame": 35.292
       },
       "road_filter": {
-        "total_s": 4.1879,
-        "ms_per_frame": 11.168
+        "total_s": 4.0484,
+        "ms_per_frame": 10.796
       },
       "track": {
-        "total_s": 4.099,
-        "ms_per_frame": 10.931
+        "total_s": 4.0096,
+        "ms_per_frame": 10.692
       },
       "scene_detect": {
-        "total_s": 7.9469,
-        "ms_per_frame": 21.192
+        "total_s": 15.0682,
+        "ms_per_frame": 40.182
       },
       "scene_track": {
-        "total_s": 3.5157,
-        "ms_per_frame": 9.375
+        "total_s": 3.3556,
+        "ms_per_frame": 8.948
       },
       "surface": {
-        "total_s": 20.1649,
-        "ms_per_frame": 53.773
+        "total_s": 19.6634,
+        "ms_per_frame": 52.436
       },
       "openvocab": {
-        "total_s": 56.0092,
-        "ms_per_frame": 149.358
+        "total_s": 51.4509,
+        "ms_per_frame": 137.202
       },
       "furniture": {
-        "total_s": 26.2688,
-        "ms_per_frame": 70.05
+        "total_s": 24.8645,
+        "ms_per_frame": 66.305
       },
       "odometry": {
-        "total_s": 7.1288,
-        "ms_per_frame": 19.01
+        "total_s": 6.7945,
+        "ms_per_frame": 18.119
       }
     },
     "note": "processing_fps = defect detector + road filter + tracking only (decode/render/export excluded); processing_fps_all_models adds the scene detector, surface segmentation, open-vocabulary detector and visual odometry; end_to_end_fps_pass1 additionally includes decode/Python overhead",
-    "render_export_s": 51.371
+    "render_export_s": 50.111
   },
   "tracking": {
-    "raw_tracks": 236,
-    "after_merge": 147,
-    "reported": 95,
-    "dropped_short_or_low_conf": 52
+    "raw_tracks": 239,
+    "after_merge": 156,
+    "reported": 102,
+    "dropped_short_or_low_conf": 54
   },
   "temporal": {
     "enabled": true,
-    "boosted_detections": 720,
+    "boosted_detections": 765,
     "relabelled_detections": 0,
-    "tracks_ever_confirmed": 49,
-    "raw_tracks_seen": 55,
+    "tracks_ever_confirmed": 51,
+    "raw_tracks_seen": 58,
     "note": "all per-frame states use past frames only (EMA / hysteresis / dwell / rate limits); the final merged report is computed after the run"
   },
   "scene_tracking": {
@@ -82,7 +88,7 @@
   "road_filter": {
     "frames": 375,
     "frames_mask_failed": 0,
-    "detections_in": 1768,
+    "detections_in": 2038,
     "detections_dropped_off_road": 0
   },
   "road_surface": {
@@ -117,9 +123,9 @@
     "assumed_camera_height_m": 1.4,
     "assumed_hfov_deg": 75.0,
     "horizon_row_px": 69.0,
-    "route_length_m_approx": 28.5,
-    "mean_speed_kmh_approx": 6.8,
-    "max_speed_kmh_approx": 10.0,
+    "route_length_m_approx": 24.4,
+    "mean_speed_kmh_approx": 5.9,
+    "max_speed_kmh_approx": 7.7,
     "frames_with_valid_motion": 374,
     "frames_total": 375,
     "net_heading_change_deg": -0.8,
@@ -164,7 +170,9 @@
       "tile_size": 0,
       "tile_overlap": 0.25,
       "rfdetr_variant": "small",
-      "rfdetr_resolution": 640
+      "rfdetr_resolution": 640,
+      "enhance": "auto",
+      "enhance_lum_thr": 125.0
     },
     "road": {
       "enabled": true,
@@ -332,9 +340,10 @@
       "off_thr": 0.2,
       "min_hits": 2,
       "coast_frames": 3,
-      "speed_median_s": 0.6,
-      "max_accel_ms2": 3.5,
-      "max_decel_ms2": 6.0,
+      "speed_median_s": 1.6,
+      "speed_ema": 0.2,
+      "max_accel_ms2": 2.5,
+      "max_decel_ms2": 4.5,
       "surface_dwell_s": 1.5,
       "surface_smooth_s": 1.5
     },
@@ -344,9 +353,20 @@
       "font_scale": 0.5,
       "hud": true,
       "encode_h264": true,
-      "crf": 20
+      "crf": 20,
+      "hold_frames": 8,
+      "box_alpha": 0.5,
+      "legend": true,
+      "tint_alpha": 0.16,
+      "tint_water": false,
+      "marking_overlay": "all",
+      "missing_marking_s": 3.0,
+      "save_frames": "data",
+      "frame_jpeg_quality": 75,
+      "furniture_labels": "flagged"
     },
     "stride": 1,
+    "target_fps": 0.0,
     "max_frames": 0
   },
   "class_names": {
@@ -360,6 +380,16 @@
     "7": "road_sign_damaged",
     "8": "traffic_light_fault",
     "9": "crosswalk_faded"
+  },
+  "frames_export": {
+    "frames": 375,
+    "detection_rows": 3820,
+    "images": false,
+    "files": [
+      "frames/frames.jsonl",
+      "frames/frame_summary.csv",
+      "frames/detections.csv"
+    ]
   },
   "furniture": {
     "inventory_items": 0,

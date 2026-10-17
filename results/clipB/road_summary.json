@@ -26,15 +26,15 @@
     ],
     "n_segments": 1,
     "method": "nvidia/segformer-b0-finetuned-ade-512-512 (ADE20K), region of interest = below horizon, causal (past-only) smoothing 1.5s + hysteresis, state change dwell 1.5s",
-    "defects_total_on_unpaved_or_mixed": 95
+    "defects_total_on_unpaved_or_mixed": 102
   },
   "odometry": {
     "assumed_camera_height_m": 1.4,
     "assumed_hfov_deg": 75.0,
     "horizon_row_px": 69.0,
-    "route_length_m_approx": 28.5,
-    "mean_speed_kmh_approx": 6.8,
-    "max_speed_kmh_approx": 10.0,
+    "route_length_m_approx": 24.4,
+    "mean_speed_kmh_approx": 5.9,
+    "max_speed_kmh_approx": 7.7,
     "frames_with_valid_motion": 374,
     "frames_total": 375,
     "net_heading_change_deg": -0.8,
@@ -55,9 +55,9 @@
       "sidewalk_left_pct": 0.0,
       "sidewalk_right_pct": 0.0,
       "distance_start_m_approx": 0.0,
-      "distance_end_m_approx": 28.5,
-      "defects_total": 95,
-      "defects_by_type": "alligator_crack:1;pothole:27;water_filled_pothole:67"
+      "distance_end_m_approx": 24.4,
+      "defects_total": 102,
+      "defects_by_type": "alligator_crack:3;pothole:38;water_filled_pothole:61"
     }
   ]
 }

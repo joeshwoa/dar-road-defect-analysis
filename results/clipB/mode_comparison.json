@@ -1,0 +1,285 @@
+[
+  {
+    "profile": "jetson_10fps",
+    "analysis_rate": {
+      "video_fps": 25.0,
+      "stride": 2,
+      "analysis_fps": 12.5,
+      "target_fps": 10.0
+    },
+    "reference_defects": 102,
+    "jetson_defects": 55,
+    "matched": 54,
+    "recall": 0.529,
+    "precision": 0.982,
+    "reference_only": [
+      {
+        "track_id": 16,
+        "defect_type": "water_filled_pothole",
+        "first_seen_s": 0.64
+      },
+      {
+        "track_id": 17,
+        "defect_type": "water_filled_pothole",
+        "first_seen_s": 0.64
+      },
+      {
+        "track_id": 20,
+        "defect_type": "water_filled_pothole",
+        "first_seen_s": 0.88
+      },
+      {
+        "track_id": 21,
+        "defect_type": "water_filled_pothole",
+        "first_seen_s": 1.2
+      },
+      {
+        "track_id": 24,
+        "defect_type": "pothole",
+        "first_seen_s": 1.56
+      },
+      {
+        "track_id": 25,
+        "defect_type": "water_filled_pothole",
+        "first_seen_s": 1.6
+      },
+      {
+        "track_id": 28,
+        "defect_type": "water_filled_pothole",
+        "first_seen_s": 1.76
+      },
+      {
+        "track_id": 31,
+        "defect_type": "water_filled_pothole",
+        "first_seen_s": 2.4
+      },
+      {
+        "track_id": 32,
+        "defect_type": "pothole",
+        "first_seen_s": 2.52
+      },
+      {
+        "track_id": 36,
+        "defect_type": "water_filled_pothole",
+        "first_seen_s": 3.04
+      },
+      {
+        "track_id": 38,
+        "defect_type": "water_filled_pothole",
+        "first_seen_s": 3.44
+      },
+      {
+        "track_id": 40,
+        "defect_type": "water_filled_pothole",
+        "first_seen_s": 3.92
+      },
+      {
+        "track_id": 42,
+        "defect_type": "water_filled_pothole",
+        "first_seen_s": 4.0
+      },
+      {
+        "track_id": 43,
+        "defect_type": "water_filled_pothole",
+        "first_seen_s": 4.0
+      },
+      {
+        "track_id": 48,
+        "defect_type": "pothole",
+        "first_seen_s": 5.12
+      },
+      {
+        "track_id": 50,
+        "defect_type": "water_filled_pothole",
+        "first_seen_s": 5.28
+      },
+      {
+        "track_id": 51,
+        "defect_type": "water_filled_pothole",
+        "first_seen_s": 5.28
+      },
+      {
+        "track_id": 52,
+        "defect_type": "water_filled_pothole",
+        "first_seen_s": 5.28
+      },
+      {
+        "track_id": 53,
+        "defect_type": "pothole",
+        "first_seen_s": 5.48
+      },
+      {
+        "track_id": 62,
+        "defect_type": "pothole",
+        "first_seen_s": 7.2
+      },
+      {
+        "track_id": 64,
+        "defect_type": "water_filled_pothole",
+        "first_seen_s": 7.44
+      },
+      {
+        "track_id": 65,
+        "defect_type": "water_filled_pothole",
+        "first_seen_s": 7.6
+      },
+      {
+        "track_id": 66,
+        "defect_type": "water_filled_pothole",
+        "first_seen_s": 7.6
+      },
+      {
+        "track_id": 67,
+        "defect_type": "water_filled_pothole",
+        "first_seen_s": 7.6
+      },
+      {
+        "track_id": 69,
+        "defect_type": "water_filled_pothole",
+        "first_seen_s": 7.68
+      },
+      {
+        "track_id": 71,
+        "defect_type": "water_filled_pothole",
+        "first_seen_s": 7.84
+      },
+      {
+        "track_id": 72,
+        "defect_type": "water_filled_pothole",
+        "first_seen_s": 8.0
+      },
+      {
+        "track_id": 73,
+        "defect_type": "water_filled_pothole",
+        "first_seen_s": 8.08
+      },
+      {
+        "track_id": 74,
+        "defect_type": "water_filled_pothole",
+        "first_seen_s": 8.24
+      },
+      {
+        "track_id": 75,
+        "defect_type": "water_filled_pothole",
+        "first_seen_s": 8.64
+      },
+      {
+        "track_id": 76,
+        "defect_type": "water_filled_pothole",
+        "first_seen_s": 8.8
+      },
+      {
+        "track_id": 78,
+        "defect_type": "pothole",
+        "first_seen_s": 9.08
+      },
+      {
+        "track_id": 79,
+        "defect_type": "water_filled_pothole",
+        "first_seen_s": 9.2
+      },
+      {
+        "track_id": 80,
+        "defect_type": "water_filled_pothole",
+        "first_seen_s": 9.2
+      },
+      {
+        "track_id": 81,
+        "defect_type": "pothole",
+        "first_seen_s": 9.36
+      },
+      {
+        "track_id": 84,
+        "defect_type": "water_filled_pothole",
+        "first_seen_s": 10.16
+      },
+      {
+        "track_id": 85,
+        "defect_type": "water_filled_pothole",
+        "first_seen_s": 10.32
+      },
+      {
+        "track_id": 86,
+        "defect_type": "water_filled_pothole",
+        "first_seen_s": 10.32
+      },
+      {
+        "track_id": 87,
+        "defect_type": "water_filled_pothole",
+        "first_seen_s": 10.56
+      },
+      {
+        "track_id": 88,
+        "defect_type": "pothole",
+        "first_seen_s": 10.68
+      },
+      {
+        "track_id": 90,
+        "defect_type": "water_filled_pothole",
+        "first_seen_s": 12.32
+      },
+      {
+        "track_id": 91,
+        "defect_type": "water_filled_pothole",
+        "first_seen_s": 12.32
+      },
+      {
+        "track_id": 94,
+        "defect_type": "water_filled_pothole",
+        "first_seen_s": 13.28
+      },
+      {
+        "track_id": 95,
+        "defect_type": "water_filled_pothole",
+        "first_seen_s": 13.36
+      },
+      {
+        "track_id": 98,
+        "defect_type": "water_filled_pothole",
+        "first_seen_s": 13.6
+      },
+      {
+        "track_id": 99,
+        "defect_type": "water_filled_pothole",
+        "first_seen_s": 13.84
+      },
+      {
+        "track_id": 100,
+        "defect_type": "water_filled_pothole",
+        "first_seen_s": 13.84
+      },
+      {
+        "track_id": 102,
+        "defect_type": "water_filled_pothole",
+        "first_seen_s": 14.0
+      }
+    ],
+    "jetson_only": [
+      {
+        "track_id": 44,
+        "defect_type": "alligator_crack",
+        "first_seen_s": 9.44
+      }
+    ],
+    "by_class_reference": {
+      "water_filled_pothole": 61,
+      "pothole": 38,
+      "alligator_crack": 3
+    },
+    "by_class_jetson": {
+      "pothole": 30,
+      "water_filled_pothole": 21,
+      "alligator_crack": 4
+    },
+    "timing_reference": {
+      "processing_fps": 17.61,
+      "processing_fps_with_scene": 9.44,
+      "processing_fps_all_models": 2.63
+    },
+    "timing_jetson": {
+      "processing_fps": 17.18,
+      "processing_fps_with_scene": 9.94,
+      "processing_fps_all_models": 2.66
+    }
+  }
+]
