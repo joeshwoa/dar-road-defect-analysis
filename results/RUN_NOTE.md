@@ -1,4 +1,5 @@
-> **Status of the results in this folder:** the `annotated.mp4` videos are from the **latest code (v5, Kaggle "Version 8", T4 x2)**: calm boxes, legend,
-> green lane paint (fine) / red (worn or missing) and the "lane markings: MISSING" warning. The CSV / JSON files, crops and figures next to them
-> were exported by the previous full run (code v3, "Version 6"); the detector, tracker and thresholds are the same, so the defect lists agree
-> except for small differences. Refreshing the tables from Version 8 is a copy-paste (see [docs/JOURNEY.md](docs/JOURNEY.md), step 17).
+> **Status of the results in this folder:** everything under `clipA/` and `clipB/` (annotated video, CSV / JSON, crops, images, route map,
+> per-frame data in `frames/`) comes from **one run of the code in this repository (Kaggle notebook "Version 10", T4 x2, 28 min)** - the full-rate
+> reference run plus the first Jetson-mode run (`jetson_10fps/`, with the clean original frames). `mode_comparison.md` compares the two.
+> Older result sets are kept in `history/`. The Jetson-mode profiles with other frame-rate caps (24 / 18 / 12 FPS) are added by a later run and are
+> listed in `mode_comparison.md` when present.
