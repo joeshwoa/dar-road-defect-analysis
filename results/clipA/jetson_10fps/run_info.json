@@ -1,0 +1,410 @@
+{
+  "video": "clipA.mp4",
+  "video_info": {
+    "path": "/kaggle/working/videos/clipA.mp4",
+    "width": 496,
+    "height": 368,
+    "fps_nominal": 36.015395277794596,
+    "fps_avg": 36.015395277794596,
+    "frame_count": 2141,
+    "duration_s": 59.4468,
+    "is_vfr": false
+  },
+  "frames_processed": 536,
+  "analysis_rate": {
+    "video_fps": 36.015,
+    "stride": 4,
+    "analysis_fps": 9.004,
+    "target_fps": 10.0
+  },
+  "stride": 4,
+  "timing": {
+    "processing_fps": 17.3,
+    "end_to_end_fps_pass1": 2.94,
+    "processing_fps_with_scene": 10.08,
+    "processing_fps_all_models": 3.04,
+    "pass1_wall_s": 182.571,
+    "stages": {
+      "detect": {
+        "total_s": 17.6198,
+        "ms_per_frame": 32.873
+      },
+      "road_filter": {
+        "total_s": 8.6214,
+        "ms_per_frame": 16.085
+      },
+      "track": {
+        "total_s": 4.7396,
+        "ms_per_frame": 8.843
+      },
+      "scene_detect": {
+        "total_s": 17.1121,
+        "ms_per_frame": 31.926
+      },
+      "scene_track": {
+        "total_s": 5.1023,
+        "ms_per_frame": 9.519
+      },
+      "surface": {
+        "total_s": 8.9124,
+        "ms_per_frame": 16.628
+      },
+      "openvocab": {
+        "total_s": 78.3615,
+        "ms_per_frame": 146.197
+      },
+      "furniture": {
+        "total_s": 26.6481,
+        "ms_per_frame": 49.717
+      },
+      "odometry": {
+        "total_s": 9.2483,
+        "ms_per_frame": 17.254
+      }
+    },
+    "note": "processing_fps = defect detector + road filter + tracking only (decode/render/export excluded); processing_fps_all_models adds the scene detector, surface segmentation, open-vocabulary detector and visual odometry; end_to_end_fps_pass1 additionally includes decode/Python overhead",
+    "render_export_s": 5.275
+  },
+  "tracking": {
+    "raw_tracks": 14,
+    "after_merge": 14,
+    "reported": 11,
+    "dropped_short_or_low_conf": 3
+  },
+  "temporal": {
+    "enabled": true,
+    "boosted_detections": 0,
+    "relabelled_detections": 0,
+    "tracks_ever_confirmed": 10,
+    "raw_tracks_seen": 12,
+    "note": "all per-frame states use past frames only (EMA / hysteresis / dwell / rate limits); the final merged report is computed after the run"
+  },
+  "scene_tracking": {
+    "raw_tracks": 92,
+    "after_merge": 69,
+    "reported": 42,
+    "dropped_short_or_low_conf": 27
+  },
+  "road_filter": {
+    "frames": 536,
+    "frames_mask_failed": 0,
+    "detections_in": 648,
+    "detections_dropped_off_road": 0
+  },
+  "road_surface": {
+    "duration_s": 59.52,
+    "surface_overall": "paved",
+    "surface_time_share_pct": {
+      "paved": 100.0,
+      "mixed": 0.0,
+      "unpaved": 0.0
+    },
+    "sidewalk_time_share_pct": {
+      "none": 37.0,
+      "left": 5.1,
+      "right": 40.0,
+      "both": 18.0
+    },
+    "sidewalk_present_pct": 63.0,
+    "mean_unpaved_ratio": 0.011,
+    "mean_standing_water_pct_of_roi": 0.08,
+    "horizon_y_px": 193.0,
+    "findings": [
+      "Road is predominantly paved (100.0% of the route).",
+      "Sidewalk present on at least one side for 63.0% of the route.",
+      "Lane markings visible in 95.5% of analysed frames; 0 worn/faded stretch(es) flagged (worn for 0.0% of the time markings were visible).",
+      "Road furniture seen: 16 sign(s), 32 traffic light(s), 0 crosswalk(s); 0 flagged as a possible problem."
+    ],
+    "n_segments": 11,
+    "method": "nvidia/segformer-b0-finetuned-ade-512-512 (ADE20K), region of interest = below horizon, causal (past-only) smoothing 1.5s + hysteresis, state change dwell 1.5s"
+  },
+  "odometry": {
+    "assumed_camera_height_m": 1.4,
+    "assumed_hfov_deg": 75.0,
+    "horizon_row_px": 193.0,
+    "route_length_m_approx": 305.7,
+    "mean_speed_kmh_approx": 18.5,
+    "max_speed_kmh_approx": 35.5,
+    "frames_with_valid_motion": 502,
+    "frames_total": 536,
+    "net_heading_change_deg": -176.8,
+    "note": "monocular, scale from an assumed camera height: treat distances/speeds as rough estimates"
+  },
+  "hardware": {
+    "platform": "Linux-6.18.48+-x86_64-with-glibc2.39",
+    "python": "3.13.15",
+    "cpu": "Intel(R) Xeon(R) CPU @ 2.00GHz",
+    "cpu_logical_cores": 4,
+    "ram_gb": 31.3,
+    "gpus": [
+      {
+        "index": 0,
+        "name": "Tesla T4",
+        "memory_gb": 15.6
+      },
+      {
+        "index": 1,
+        "name": "Tesla T4",
+        "memory_gb": 15.6
+      }
+    ],
+    "torch": "2.11.0+cu128",
+    "cuda_available": true,
+    "cuda": "12.8",
+    "ultralytics": "8.4.177",
+    "transformers": "5.16.1",
+    "cv2": "4.14.0"
+  },
+  "config": {
+    "detect": {
+      "backend": "ultralytics",
+      "weights": "/kaggle/input/notebooks/joeshwoageorge/notebook2a085ffb44/weights/yolo26s_rdd_v2.pt",
+      "imgsz": 800,
+      "conf": 0.15,
+      "iou": 0.6,
+      "device": "auto",
+      "half": true,
+      "max_det": 150,
+      "classes": null,
+      "tile_size": 0,
+      "tile_overlap": 0.25,
+      "rfdetr_variant": "small",
+      "rfdetr_resolution": 640,
+      "enhance": "auto",
+      "enhance_lum_thr": 125.0
+    },
+    "road": {
+      "enabled": true,
+      "model_id": "nvidia/segformer-b0-finetuned-cityscapes-512-1024",
+      "every_n": 3,
+      "min_overlap": 0.25,
+      "dilate_px": 21,
+      "min_road_fraction": 0.04,
+      "input_width": 1024
+    },
+    "track": {
+      "tracker": "botsort",
+      "track_high_thresh": 0.3,
+      "track_low_thresh": 0.1,
+      "new_track_thresh": 0.35,
+      "track_buffer": 11,
+      "match_thresh": 0.8,
+      "gmc_method": "sparseOptFlow",
+      "with_reid": false
+    },
+    "merge": {
+      "enabled": true,
+      "max_gap_frames": 10,
+      "iou_thr": 0.2,
+      "dist_factor": 0.6,
+      "size_ratio": 2.5,
+      "dup_iou": 0.5,
+      "dup_frac": 0.5,
+      "compatible_classes": []
+    },
+    "report": {
+      "min_observations": 3,
+      "min_max_conf": 0.4,
+      "class_min_conf": {
+        "4": 0.5,
+        "5": 0.24,
+        "6": 0.45,
+        "7": 0.5,
+        "8": 0.6,
+        "9": 0.5
+      },
+      "class_min_obs": {
+        "4": 3,
+        "5": 2,
+        "6": 2,
+        "7": 2,
+        "8": 3,
+        "9": 2
+      }
+    },
+    "sam": {
+      "enabled": true,
+      "weights": "sam2.1_b.pt"
+    },
+    "scene": {
+      "enabled": true,
+      "weights": "yolo26s.pt",
+      "imgsz": 640,
+      "conf": 0.3,
+      "classes": [
+        0,
+        1,
+        2,
+        3,
+        5,
+        7,
+        9,
+        11
+      ],
+      "min_observations": 5,
+      "min_max_conf": 0.45,
+      "compatible_classes": [
+        [
+          2,
+          5,
+          7
+        ]
+      ]
+    },
+    "surface": {
+      "enabled": true,
+      "model_id": "nvidia/segformer-b0-finetuned-ade-512-512",
+      "every_n": 8,
+      "input_width": 672,
+      "roi_top_margin": 0.03,
+      "water_detect": true,
+      "water_min_area_frac": 0.0005,
+      "water_max_area_frac": 0.2,
+      "bright_puddles": true,
+      "sidewalk_min_frac": 0.008,
+      "smooth_s": 1.5,
+      "causal": true,
+      "dwell_s": 1.5,
+      "min_segment_s": 2.0,
+      "unpaved_thr": 0.6,
+      "paved_thr": 0.25,
+      "tint": true
+    },
+    "odometry": {
+      "enabled": true,
+      "hfov_deg": 75.0,
+      "cam_height_m": 1.4,
+      "horizon_frac": 0.0,
+      "map_inset": true
+    },
+    "openvocab": {
+      "enabled": true,
+      "model_id": "google/owlv2-base-patch16-ensemble",
+      "prompts": {
+        "a manhole cover": 5,
+        "a storm drain grate": 5
+      },
+      "every_n": 12,
+      "conf": 0.16,
+      "max_area_frac": 0.04
+    },
+    "furniture": {
+      "enabled": true,
+      "model_id": "facebook/mask2former-swin-large-mapillary-vistas-semantic",
+      "clip_enabled": true,
+      "clip_id": "openai/clip-vit-base-patch32",
+      "every_n": 16,
+      "short_side": 576,
+      "track_max_age": 4,
+      "min_area_px": {
+        "sign": 90,
+        "light": 30,
+        "crosswalk": 400
+      },
+      "min_obs": {
+        "sign": 3,
+        "light": 4,
+        "crosswalk": 3
+      },
+      "inventory_min_obs": 3,
+      "bad_on": {
+        "sign": 0.55,
+        "light": 0.7,
+        "crosswalk": 0.6
+      },
+      "bad_off": {
+        "sign": 0.35,
+        "light": 0.4,
+        "crosswalk": 0.4
+      },
+      "marking_near_m": 4.0,
+      "marking_far_m": 30.0,
+      "marking_dwell_s": 1.5,
+      "marking_worn_thr": 0.5,
+      "marking_ok_thr": 0.62,
+      "marking_abs_weber": 0.1,
+      "lean_ok_deg": 8.0,
+      "clip_min_px": 40,
+      "clip_bad_floor": 0.5,
+      "light_min_h_px": 14,
+      "light_dark_obs": 8
+    },
+    "temporal": {
+      "enabled": true,
+      "prior_weight": 0.35,
+      "prior_max_boost": 0.15,
+      "prior_iou": 0.3,
+      "track_alpha": 0.4,
+      "on_thr": 0.35,
+      "off_thr": 0.2,
+      "min_hits": 2,
+      "coast_frames": 1,
+      "speed_median_s": 1.6,
+      "speed_ema": 0.2,
+      "max_accel_ms2": 2.5,
+      "max_decel_ms2": 4.5,
+      "surface_dwell_s": 1.5,
+      "surface_smooth_s": 1.5
+    },
+    "render": {
+      "enabled": false,
+      "thickness": 2,
+      "font_scale": 0.5,
+      "hud": true,
+      "encode_h264": true,
+      "crf": 20,
+      "hold_frames": 8,
+      "box_alpha": 0.5,
+      "legend": true,
+      "tint_alpha": 0.16,
+      "tint_water": false,
+      "marking_overlay": "all",
+      "missing_marking_s": 3.0,
+      "save_frames": "all",
+      "frame_jpeg_quality": 75,
+      "furniture_labels": "flagged"
+    },
+    "stride": 4,
+    "target_fps": 10.0,
+    "max_frames": 0
+  },
+  "class_names": {
+    "0": "longitudinal_crack",
+    "1": "transverse_crack",
+    "2": "alligator_crack",
+    "3": "pothole",
+    "4": "water_filled_pothole",
+    "5": "manhole_or_drain",
+    "6": "lane_marking_worn",
+    "7": "road_sign_damaged",
+    "8": "traffic_light_fault",
+    "9": "crosswalk_faded"
+  },
+  "frames_export": {
+    "frames": 536,
+    "detection_rows": 3556,
+    "images": true,
+    "files": [
+      "frames/frames.jsonl",
+      "frames/frame_summary.csv",
+      "frames/detections.csv",
+      "frames/img/frame_NNNNN.jpg"
+    ]
+  },
+  "furniture": {
+    "inventory_items": 48,
+    "marking": {
+      "updates": 134,
+      "updates_with_visible_markings": 128,
+      "markings_visible_pct": 95.5,
+      "episodes_worn": 0,
+      "episodes": [],
+      "mean_visibility": 0.866,
+      "min_visibility": 0.57,
+      "median_paint_contrast_weber": 0.362,
+      "reference_contrast_p85": 0.602,
+      "worn_time_pct": 0.0,
+      "method": "paint contrast + segmenter confidence vs a causal running reference of this video; heuristic, not a calibrated pavement-marking retroreflectivity measurement"
+    }
+  }
+}

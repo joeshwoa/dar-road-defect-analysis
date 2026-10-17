@@ -1,0 +1,12 @@
+segment_id,start_s,end_s,duration_s,surface,sidewalk,unpaved_pct,paved_pct_of_roi,unpaved_pct_of_roi,standing_water_pct_of_roi,sidewalk_left_pct,sidewalk_right_pct,distance_start_m_approx,distance_end_m_approx,defects_total,defects_by_type
+1,0.0,3.02,3.02,paved,left,0.9,86.7,0.8,0.0,0.38,0.55,0.0,18.8,0,
+2,3.02,7.92,4.9,paved,right,0.3,80.8,0.3,0.0,0.05,0.64,18.8,24.7,0,
+3,7.93,18.15,10.22,paved,none,0.7,86.8,0.7,0.0,0.95,0.81,24.7,64.5,0,
+4,18.15,23.7,5.55,paved,right,0.0,98.0,0.0,0.0,0.69,1.37,64.5,102.6,0,
+5,23.71,28.38,4.68,paved,both,0.0,97.8,0.0,0.0,0.51,1.55,102.6,134.1,0,
+6,28.38,31.05,2.67,paved,right,0.0,97.8,0.0,0.0,0.01,0.42,134.1,156.8,1,alligator_crack:1
+7,31.05,40.84,9.79,paved,none,0.0,93.6,0.0,0.0,0.17,0.5,156.8,222.4,0,
+8,40.84,46.4,5.57,paved,right,1.9,95.1,1.9,0.0,0.15,2.38,222.4,257.7,1,longitudinal_crack:1
+9,46.4,48.41,2.0,paved,none,1.7,95.2,1.6,0.0,0.0,3.45,257.7,266.1,0,
+10,48.41,53.51,5.11,paved,right,1.3,83.0,1.1,0.01,1.67,4.03,266.1,288.0,4,alligator_crack:4
+11,53.52,59.52,6.01,paved,both,5.4,47.1,3.6,0.75,11.34,16.78,288.1,305.7,5,alligator_crack:2;longitudinal_crack:1;manhole_or_drain:2

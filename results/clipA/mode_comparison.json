@@ -1,0 +1,248 @@
+{
+  "clip": "clipA",
+  "analysis_rate": {
+    "video_fps": 36.015,
+    "stride": 4,
+    "analysis_fps": 9.004,
+    "target_fps": 10.0
+  },
+  "reference_defects": 53,
+  "jetson_defects": 11,
+  "matched": 11,
+  "reference_only": [
+    {
+      "track_id": 1,
+      "defect_type": "pothole",
+      "first_seen_s": 9.28
+    },
+    {
+      "track_id": 2,
+      "defect_type": "pothole",
+      "first_seen_s": 10.423
+    },
+    {
+      "track_id": 3,
+      "defect_type": "pothole",
+      "first_seen_s": 10.619
+    },
+    {
+      "track_id": 4,
+      "defect_type": "longitudinal_crack",
+      "first_seen_s": 11.112
+    },
+    {
+      "track_id": 5,
+      "defect_type": "pothole",
+      "first_seen_s": 12.082
+    },
+    {
+      "track_id": 6,
+      "defect_type": "pothole",
+      "first_seen_s": 12.286
+    },
+    {
+      "track_id": 7,
+      "defect_type": "longitudinal_crack",
+      "first_seen_s": 13.277
+    },
+    {
+      "track_id": 8,
+      "defect_type": "longitudinal_crack",
+      "first_seen_s": 14.533
+    },
+    {
+      "track_id": 9,
+      "defect_type": "traffic_light_fault",
+      "first_seen_s": 14.596
+    },
+    {
+      "track_id": 10,
+      "defect_type": "longitudinal_crack",
+      "first_seen_s": 14.808
+    },
+    {
+      "track_id": 11,
+      "defect_type": "longitudinal_crack",
+      "first_seen_s": 15.086
+    },
+    {
+      "track_id": 12,
+      "defect_type": "longitudinal_crack",
+      "first_seen_s": 18.289
+    },
+    {
+      "track_id": 13,
+      "defect_type": "longitudinal_crack",
+      "first_seen_s": 18.456
+    },
+    {
+      "track_id": 14,
+      "defect_type": "longitudinal_crack",
+      "first_seen_s": 18.622
+    },
+    {
+      "track_id": 15,
+      "defect_type": "longitudinal_crack",
+      "first_seen_s": 25.43
+    },
+    {
+      "track_id": 17,
+      "defect_type": "alligator_crack",
+      "first_seen_s": 26.659
+    },
+    {
+      "track_id": 18,
+      "defect_type": "pothole",
+      "first_seen_s": 27.298
+    },
+    {
+      "track_id": 19,
+      "defect_type": "alligator_crack",
+      "first_seen_s": 27.52
+    },
+    {
+      "track_id": 20,
+      "defect_type": "alligator_crack",
+      "first_seen_s": 27.855
+    },
+    {
+      "track_id": 21,
+      "defect_type": "pothole",
+      "first_seen_s": 28.16
+    },
+    {
+      "track_id": 22,
+      "defect_type": "pothole",
+      "first_seen_s": 30.132
+    },
+    {
+      "track_id": 23,
+      "defect_type": "alligator_crack",
+      "first_seen_s": 30.908
+    },
+    {
+      "track_id": 24,
+      "defect_type": "longitudinal_crack",
+      "first_seen_s": 40.976
+    },
+    {
+      "track_id": 25,
+      "defect_type": "transverse_crack",
+      "first_seen_s": 43.643
+    },
+    {
+      "track_id": 27,
+      "defect_type": "longitudinal_crack",
+      "first_seen_s": 44.531
+    },
+    {
+      "track_id": 28,
+      "defect_type": "longitudinal_crack",
+      "first_seen_s": 44.865
+    },
+    {
+      "track_id": 29,
+      "defect_type": "longitudinal_crack",
+      "first_seen_s": 45.035
+    },
+    {
+      "track_id": 30,
+      "defect_type": "alligator_crack",
+      "first_seen_s": 45.208
+    },
+    {
+      "track_id": 31,
+      "defect_type": "pothole",
+      "first_seen_s": 46.903
+    },
+    {
+      "track_id": 32,
+      "defect_type": "pothole",
+      "first_seen_s": 47.375
+    },
+    {
+      "track_id": 33,
+      "defect_type": "transverse_crack",
+      "first_seen_s": 47.905
+    },
+    {
+      "track_id": 34,
+      "defect_type": "transverse_crack",
+      "first_seen_s": 48.097
+    },
+    {
+      "track_id": 36,
+      "defect_type": "manhole_or_drain",
+      "first_seen_s": 48.542
+    },
+    {
+      "track_id": 40,
+      "defect_type": "longitudinal_crack",
+      "first_seen_s": 49.985
+    },
+    {
+      "track_id": 41,
+      "defect_type": "pothole",
+      "first_seen_s": 50.409
+    },
+    {
+      "track_id": 42,
+      "defect_type": "alligator_crack",
+      "first_seen_s": 50.409
+    },
+    {
+      "track_id": 43,
+      "defect_type": "longitudinal_crack",
+      "first_seen_s": 51.403
+    },
+    {
+      "track_id": 45,
+      "defect_type": "pothole",
+      "first_seen_s": 53.763
+    },
+    {
+      "track_id": 49,
+      "defect_type": "longitudinal_crack",
+      "first_seen_s": 56.191
+    },
+    {
+      "track_id": 51,
+      "defect_type": "longitudinal_crack",
+      "first_seen_s": 58.617
+    },
+    {
+      "track_id": 52,
+      "defect_type": "longitudinal_crack",
+      "first_seen_s": 58.999
+    },
+    {
+      "track_id": 53,
+      "defect_type": "longitudinal_crack",
+      "first_seen_s": 59.165
+    }
+  ],
+  "jetson_only": [],
+  "by_class_reference": {
+    "longitudinal_crack": 21,
+    "alligator_crack": 13,
+    "pothole": 12,
+    "transverse_crack": 3,
+    "manhole_or_drain": 3,
+    "traffic_light_fault": 1
+  },
+  "by_class_jetson": {
+    "alligator_crack": 7,
+    "longitudinal_crack": 2,
+    "manhole_or_drain": 2
+  },
+  "timing_reference": {
+    "processing_fps": 17.78,
+    "processing_fps_with_scene": 10.23,
+    "processing_fps_all_models": 3.06
+  },
+  "timing_jetson": {
+    "processing_fps": 17.3,
+    "processing_fps_with_scene": 10.08,
+    "processing_fps_all_models": 3.04
+  }
+}

@@ -1,0 +1,43 @@
+track_id,class,first_seen_s,first_seen_timecode,last_seen_s,visible_s,n_frames_detected,max_confidence,size_trend,log_height_slope_per_s,lane_hint,mean_box_height_px,colour_approx,side_in_frame,motion_vs_ego,passed_by_ego,first_distance_m_approx,closest_distance_m_approx,closing_speed_kmh_approx,closest_time_s,map_x_m,map_y_m
+1,truck,0.0,00:00:00.000,2.016,2.016,20,0.8838,approaching,0.297,right,136.3,silver/grey,right,approaching,yes,9.0,3.5,10.0,2.02,2.5,17.0
+2,bicycle,0.0,00:00:00.000,3.242,3.242,10,0.6978,approaching,0.15,left,37.0,brown,left,approaching,no,17.4,9.6,8.7,3.24,-2.9,29.4
+3,car,0.911,00:00:00.911,8.258,7.348,58,0.916,steady,0.113,left,83.3,silver/grey,left,steady,no,14.6,4.1,5.1,8.14,-3.4,28.8
+4,car,2.127,00:00:02.127,5.683,3.555,28,0.8799,approaching,0.449,right,26.8,yellow/beige,right,approaching,yes,29.7,8.9,71.9,5.68,5.8,32.0
+5,car,4.685,00:00:04.685,6.361,1.676,15,0.9014,approaching,0.654,right,34.3,orange,right,approaching,yes,28.0,9.4,60.9,6.36,6.1,32.9
+6,car,4.909,00:00:04.908,6.029,1.12,11,0.8726,approaching,0.708,right,43.0,purple/pink,right,approaching,yes,29.0,9.1,68.5,6.03,5.9,32.4
+7,car,9.471,00:00:09.471,17.482,8.011,71,0.9473,approaching,0.217,left,70.9,yellow/beige,left,approaching,yes,27.3,3.2,11.6,16.95,-3.2,61.9
+8,traffic light,12.806,00:00:12.806,13.805,0.998,10,0.728,approaching,0.416,left,16.9,,,,,,,,,,
+9,car,12.806,00:00:12.806,15.694,2.887,27,0.7637,steady,0.041,centre,12.1,orange,ahead,steady,no,,,,15.69,,
+10,traffic light,13.593,00:00:13.593,14.924,1.331,13,0.8589,approaching,0.465,left,26.5,,,,,,,,,,
+11,traffic light,13.593,00:00:13.593,14.361,0.768,8,0.7944,approaching,0.456,left,23.0,,,,,,,,,,
+12,traffic light,15.139,00:00:15.139,16.705,1.566,10,0.5469,approaching,0.597,centre,28.3,,,,,,,,,,
+13,traffic light,15.694,00:00:15.694,16.705,1.012,10,0.7432,steady,0.054,centre,29.5,,,,,,,,,,
+14,traffic light,16.04,00:00:16.040,16.705,0.666,7,0.6689,unknown,,left,30.7,,,,,,,,,,
+15,truck,17.265,00:00:17.265,22.495,5.23,37,0.8228,approaching,0.241,left,45.2,brown,left,approaching,yes,30.5,6.5,20.7,22.15,-3.3,97.0
+16,car,21.375,00:00:21.375,33.825,12.45,108,0.8335,steady,0.11,left,40.9,yellow/beige,left,steady,no,30.5,9.7,8.2,32.49,27.8,173.1
+17,traffic light,21.928,00:00:21.928,24.593,2.665,24,0.769,approaching,0.283,left,15.0,,,,,,,,,,
+18,car,21.928,00:00:21.928,52.405,30.477,265,0.8833,steady,0.017,centre,39.9,yellow/beige,ahead,steady,no,28.0,10.3,-0.7,36.28,45.2,191.6
+19,car,23.372,00:00:23.372,24.928,1.556,11,0.644,steady,0.039,centre,13.4,orange,ahead,steady,no,,,,24.93,,
+20,car,24.151,00:00:24.151,24.928,0.776,8,0.7266,approaching,0.391,left,30.9,orange,left,approaching,no,28.7,18.0,72.3,24.93,0.6,127.9
+21,car,24.151,00:00:24.151,25.039,0.888,9,0.7505,approaching,0.625,left,49.1,orange,left,approaching,yes,26.7,10.5,63.0,24.93,-0.4,120.4
+22,car,24.262,00:00:24.262,24.707,0.444,5,0.8428,unknown,,left,52.2,brown,left,steady,no,14.6,10.5,,24.71,-1.5,119.6
+23,traffic light,25.937,00:00:25.937,27.385,1.447,13,0.7056,approaching,0.291,left,25.2,,,,,,,,,,
+24,traffic light,26.947,00:00:26.946,27.825,0.879,9,0.7476,approaching,0.446,centre,33.4,,,,,,,,,,
+25,traffic light,31.048,00:00:31.048,31.61,0.562,3,0.5176,unknown,,right,24.1,,,,,,,,,,
+26,car,33.825,00:00:33.825,51.963,18.138,152,0.8818,steady,-0.066,left,47.0,yellow/beige,left,steady,no,10.5,9.2,-4.2,36.07,38.5,192.8
+27,car,34.607,00:00:34.607,36.393,1.785,10,0.6514,steady,-0.116,centre,18.4,yellow/beige,ahead,steady,no,,,,36.39,,
+28,car,38.393,00:00:38.393,40.726,2.333,12,0.7446,steady,0.023,left,52.3,orange,left,steady,no,16.2,12.2,3.6,40.73,55.0,222.9
+29,traffic light,38.504,00:00:38.504,38.837,0.334,4,0.8291,unknown,,right,38.3,,,,,,,,,,
+30,car,38.95,00:00:38.950,39.507,0.557,6,0.7686,unknown,,right,36.2,purple/pink,right,steady,no,25.8,16.5,57.2,39.51,68.2,207.7
+31,traffic light,40.616,00:00:40.616,41.059,0.443,5,0.6353,unknown,,centre,32.1,,,,,,,,,,
+32,truck,44.393,00:00:44.393,44.954,0.561,6,0.6353,unknown,,left,48.9,brown,left,steady,no,23.0,21.3,-6.6,44.84,65.7,257.8
+33,person,49.736,00:00:49.736,50.409,0.673,7,0.7646,unknown,,right,39.5,,,,,,,,,,
+34,car,49.847,00:00:49.847,51.513,1.666,15,0.8447,receding,-0.245,left,46.4,yellow/beige,left,receding,no,11.1,11.1,-26.9,49.85,76.3,266.5
+35,car,50.961,00:00:50.961,52.513,1.552,14,0.6567,steady,0.098,left,11.9,yellow/beige,left,steady,no,,,,52.51,,
+36,person,52.735,00:00:52.735,54.958,2.223,21,0.8765,steady,0.049,centre,70.6,,,,,,,,,,
+37,car,54.958,00:00:54.958,55.531,0.574,6,0.8828,unknown,,left,75.7,silver/grey,left,steady,no,10.7,8.1,4.8,55.4,99.6,253.5
+38,car,55.068,00:00:55.068,59.416,4.348,35,0.8696,approaching,0.213,centre,41.1,silver/grey,ahead,approaching,no,21.3,10.0,7.2,59.3,90.9,239.9
+39,car,55.068,00:00:55.068,59.416,4.348,40,0.9175,approaching,0.194,left,34.2,silver/grey,left,approaching,no,19.2,10.1,6.1,59.3,94.3,239.9
+40,car,55.401,00:00:55.401,59.416,4.015,36,0.8862,approaching,0.162,right,30.3,yellow/beige,right,approaching,yes,17.2,13.5,5.5,58.98,85.3,237.3
+41,stop sign,55.633,00:00:55.633,58.527,2.894,26,0.9351,approaching,0.336,right,36.4,,,,,,,,,,
+42,car,58.195,00:00:58.195,59.416,1.221,10,0.5737,steady,0.078,right,18.9,black,right,steady,no,,,,59.42,,
