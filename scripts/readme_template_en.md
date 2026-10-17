@@ -24,6 +24,7 @@ traffic lights. Decisions are **stable** (no flicker) and use **past frames only
 |---|---|
 | Annotated video | [`results/clipA/annotated.mp4`](results/clipA/annotated.mp4), [`results/clipB/annotated.mp4`](results/clipB/annotated.mp4) |
 | Defect table: track ID, type, first seen, highest confidence, image | `results/clip*/defects.csv` and `defects.json` (+ `images/`, `crops/`) |
+| **Per-frame details** (every frame has its own record) | `results/clip*/frames/frame_summary.csv` (one row per frame), `frames/detections.csv` (one row per detection per frame), `frames/frames.jsonl` (full nested record per frame), `frames/img/frame_NNNNN.jpg` (the annotated frame) |
 | FPS and hardware | section 3 below, `results/clip*/run_info.json`, `results/benchmarks/` |
 | One-page README: approach, errors, improvements, Jetson | sections 4-8 below, [`docs/JETSON.md`](docs/JETSON.md) |
 | Code | `roadscan/` (package), `scripts/`, `notebooks/`, `tests/` |
@@ -70,6 +71,30 @@ traffic lights. Decisions are **stable** (no flicker) and use **past frames only
 
 *Reading it*: the detector is not the bottleneck. The optional heavy models (OWLv2 ≈ 150 ms/frame, Mask2Former ≈ 50-70 ms/frame, run every 3rd / 4th frame) are. For real-time use switch them off or lower their cadence - the core runs at {fpsA:.0f}+ FPS.
 
+### Which frame rate? (and what to run on a Jetson)
+
+The same code was run in **two modes** (`scripts/run_video.py`, `--deploy-fps 24,18,12`):
+
+* **Reference mode (offline)** - every frame: clipA 36 FPS, clipB 25 FPS. This produces `annotated.mp4` and the main tables.
+* **Jetson mode** - the models see **at most N FPS** (a *cap*; `target_fps` picks the smallest stride that stays under it and rescales every frame-count parameter, including the "seen in >= N frames" report rule, to the analysed rate). Every analysed frame gets its own record and its own *original* frame with only the boxes drawn. Profiles tested: {tested} FPS caps. {jline_en}; its frames are in `results/clip*/{jdir}/frames/`.
+
+{mode_table}
+
+*How to read it*: **recall** = share of the reference defects that the Jetson mode also finds, **precision** = share of its defects that are also in the reference (both computed by `scripts/compare_modes.py`; a match = same class and overlapping visible time, +/-0.75 s). It is a *consistency* measure against our own full-rate run, not against human labels. Defects are on screen only briefly (median ~0.3 s on clipA, ~1 s on clipB at full rate), so the lower the frame rate the more of them are lost - a 10 FPS cap (stride 4 on clipA) kept every defect it reported (precision ~100%) but found only about a fifth of clipA's defects, which is why a 10 FPS cap is **not** enough. The cheap detector + tracker should therefore run at the highest rate the device allows, while the heavy models (open-vocabulary manholes, furniture segmentation, surface) run at a lower, fixed cadence. On the T4 the recommended profile runs the core (detector + road filter + tracking) at {jfpsA} FPS (clipA) / {jfpsB} FPS (clipB) and *all* models at {jallA} / {jallB} FPS. A Jetson is slower than a T4 - see [docs/JETSON.md](docs/JETSON.md) for the TensorRT plan; we did **not** measure on a Jetson.
+
+### Per-frame output
+
+`results/clip*/frames/` (reference, every frame: data only) and `results/clip*/{jdir}/frames/` (analysed frames: data **and** images):
+
+| file | content |
+|---|---|
+| `frame_summary.csv` | one row per frame: time, road surface, sidewalk, lane-paint state / missing flag, speed, position, number of defects / road users / signs / lights / crosswalks |
+| `detections.csv` | one row per object per frame: kind, track id, class, confidence, box (x1,y1,x2,y2) |
+| `frames.jsonl` | the full nested record of each frame (defects, road users, road furniture, road state, ego motion) |
+| `img/frame_NNNNN.jpg` | the **original frame** with the boxes of everything we track (no HUD, no legend, no map) |
+
+All values are what a real-time system knows *at that frame* (past-only). The live map in `annotated.mp4` shows only the remembered trail (last 120 m) and the defects seen so far - never the rest of the route; `route_map.png` is a post-run summary for the report.
+
 ## 4. Approach
 
 ![pipeline](docs/images/fig_pipeline.png)
@@ -106,7 +131,7 @@ Why several small models instead of one big one: see [docs/JOURNEY.md](docs/JOUR
 
 ![before after B](docs/images/before_after_clipB.jpg)
 
-**Colour key** (also drawn on the video): coloured boxes = defect class (see the legend), light-orange tint = unpaved ground, thin green box = sign / light / crosswalk judged OK, red = *possible problem*, red paint overlay = worn lane markings (only drawn when worn).
+**Colour key** (also drawn on the video): coloured boxes = defect class (see the legend), light-orange tint = unpaved ground, thin green box = sign / light / crosswalk judged OK, red = *possible problem*, **lane paint is traced green when it is visible and fine and red when it is worn/faded**, and the HUD shows a red *MISSING - possible problem* line when a paved road shows no paint for 3 s in a row (past frames only).
 
 ## 7. How to improve it
 
@@ -129,7 +154,7 @@ pip install -r requirements.txt
 python scripts/run_video.py my_video.mp4 --weights weights/yolo26s_rdd.pt --out outputs \
        --scene --openvocab --furniture            # --sam for masks, --no-temporal to compare
 python scripts/make_figures.py --results outputs --out docs/images
-python -m pytest -q tests                          # 25 unit tests (temporal logic, tracking merge, furniture helpers)
+python -m pytest -q tests                          # 28 unit tests (temporal logic, tracking merge, furniture helpers)
 ```
 
 Kaggle: `notebooks/03_infer_videos_kaggle.ipynb` (inference), `01_train_yolo26_kaggle.ipynb` / `04_finetune_yolo26_kaggle.ipynb` (training), runbook in [docs/KAGGLE_RUNBOOK.md](docs/KAGGLE_RUNBOOK.md).
@@ -141,7 +166,7 @@ roadscan/            detectors.py  tracking.py  temporal.py  furniture.py  surfa
                      mapping.py  vehicles.py  road_mask.py  render.py  export.py  pipeline.py  config.py
 scripts/             run_video.py  benchmark.py  sweep.py  train_yolo.py  prepare_data.py  make_figures.py  make_gallery.py
 notebooks/           01 train · 02 RF-DETR (challenger) · 03 inference · 04 fine-tune (generated by make_notebooks.py)
-tests/               25 unit tests
+tests/               28 unit tests
 results/             final outputs per clip + benchmarks + history of earlier runs (results/history)
 docs/                JOURNEY(.ar).md · JETSON.md · KAGGLE_RUNBOOK.md · images/
 ```

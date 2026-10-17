@@ -23,6 +23,7 @@
 |---|---|
 | فيديو مرسوم عليه | [`results/clipA/annotated.mp4`](results/clipA/annotated.mp4)، [`results/clipB/annotated.mp4`](results/clipB/annotated.mp4) |
 | جدول العيوب: رقم التراك، النوع، أول ظهور، أعلى ثقة، الصورة | `results/clip*/defects.csv` و`defects.json` (+ `images/`، `crops/`) |
+| **تفاصيل كل إطار** (كل frame له سجل خاص) | `results/clip*/frames/frame_summary.csv` (صف لكل إطار)، `frames/detections.csv` (صف لكل اكتشاف في كل إطار)، `frames/frames.jsonl` (سجل كامل لكل إطار)، `frames/img/frame_NNNNN.jpg` (الإطار نفسه عليه الرسم) |
 | الـ FPS والهاردوير | القسم 3 تحت، `results/clip*/run_info.json`، `results/benchmarks/` |
 | README من صفحة: الطريقة، الأخطاء، التحسين، Jetson | الأقسام 4-8 تحت، [`docs/JETSON.md`](docs/JETSON.md) |
 | الكود | `roadscan/` (الحزمة)، `scripts/`، `notebooks/`، `tests/` |
@@ -70,6 +71,30 @@
 *القراءة*: الـ detector مش هو عنق الزجاجة. الموديلات الثقيلة الاختيارية (OWLv2 ≈ 150 ms/إطار، Mask2Former ≈ 50-70 ms/إطار، بتشتغل
 كل 3 / 4 إطارات) هي اللي بتبطّأ. للـ real-time اقفلها أو قلّل تكرارها - النواة بتشتغل {fpsA:.0f}+ FPS.
 
+### أنهي frame rate؟ (وإيه اللي يشتغل على Jetson)
+
+نفس الكود اتشغل على **وضعين** (`scripts/run_video.py`، الخيار `--deploy-fps 24,18,12`):
+
+* **وضع المرجع (offline)** - كل إطار: clipA 36 إطار/ث، clipB 25 إطار/ث. منه طلع `annotated.mp4` والجداول الأساسية.
+* **وضع Jetson** - الموديلات بتشوف **حد أقصى N إطار/ث** (سقف؛ `target_fps` بيختار أصغر stride تحت السقف ده، وكل بارامتر معدود بالإطارات - ومعاه قاعدة "اتشاف في ≥ N إطار" - بيتعدّل على المعدل ده). كل إطار متحلل ليه سجل وصورة **الإطار الأصلي** عليها البوكسات بس. السقوف المتجرّبة: {tested} إطار/ث. {jline_ar}؛ وإطاراته في `results/clip*/{jdir}/frames/`.
+
+{mode_table}
+
+*إزاي تقرا الجدول*: **recall** = نسبة عيوب المرجع اللي وضع Jetson لقاها برضه، و**precision** = نسبة عيوبه اللي موجودة في المرجع (من `scripts/compare_modes.py`؛ التطابق = نفس الكلاس ووقت ظهور متداخل ±0.75 ث). ده قياس *اتساق* مع تشغيلنا بكل الإطارات، مش مع تعنين بشري. العيب بيظهر في الكادر لحظات قصيرة (وسيط ~0.3 ث في clipA و~1 ث في clipB)، فكل ما المعدل قل ضاع منهم أكتر - سقف 10 إطار/ث (stride 4 في clipA) كل اللي طلّعه صح (precision ~100%) لكنه لقى حوالي خُمس عيوب clipA بس، عشان كده سقف 10 **مش** كفاية. فالـ detector والتتبع (الخفيفين) يشتغلوا بأعلى معدل يستحمله الجهاز، والموديلات التقيلة (manholes، furniture، surface) بمعدل أقل وثابت. على T4 البروفايل الموصى بيه بيشغل النواة على {jfpsA} إطار/ث (clipA) / {jfpsB} (clipB) و*كل* الموديلات على {jallA} / {jallB}. الـ Jetson أبطأ من T4 - شوف [docs/JETSON.md](docs/JETSON.md)؛ إحنا **ما قسناش** على Jetson فعلياً.
+
+### مخرجات كل إطار
+
+`results/clip*/frames/` (المرجع، كل إطار: بيانات بس) و `results/clip*/{jdir}/frames/` (الإطارات المتحللة: بيانات **وصور**):
+
+| الملف | المحتوى |
+|---|---|
+| `frame_summary.csv` | صف لكل إطار: الوقت، نوع الطريق، الرصيف، حالة دهان الحارة / علامة الاختفاء، السرعة، الموقع، عدد العيوب / مستخدمي الطريق / اللافتات / الإشارات / العبور |
+| `detections.csv` | صف لكل كائن في كل إطار: النوع، رقم التراك، الكلاس، الثقة، البوكس (x1,y1,x2,y2) |
+| `frames.jsonl` | السجل الكامل المتداخل لكل إطار (عيوب، مستخدمو طريق، معالم، حالة الطريق، حركة العربية) |
+| `img/frame_NNNNN.jpg` | **الإطار الأصلي** وعليه بوكسات كل اللي بنتتبعه (من غير HUD ولا legend ولا خريطة) |
+
+كل القيم هي اللي نظام real-time يعرفها *في الإطار ده* (من الماضي بس). الخريطة الحية في `annotated.mp4` بتعرض بس المسار المتذكّر (آخر 120 متر) والعيوب اللي اتشافت لحد دلوقتي - مش باقي الطريق أبداً؛ و`route_map.png` ملخص بعد التشغيل للتقرير.
+
 ## 4. الطريقة
 
 ![pipeline](docs/images/fig_pipeline.png)
@@ -106,7 +131,7 @@
 
 ![before after B](docs/images/before_after_clipB.jpg)
 
-**مفتاح الألوان** (مرسوم كمان على الفيديو): المربعات الملونة = كلاس العيب (شوف الـ legend)، تلوين برتقالي فاتح = أرض ترابية، مربع أخضر رفيع = لوحة/إشارة/عبور مشاة اتحكم عليها سليمة، أحمر = *مشكلة محتملة*، طبقة حمرا على دهان الحارة = باهت (بتظهر بس وقت ما يبقى باهت).
+**مفتاح الألوان** (مرسوم كمان على الفيديو): المربعات الملونة = كلاس العيب (شوف الـ legend)، تلوين برتقالي فاتح = أرض ترابية، مربع أخضر رفيع = لوحة/إشارة/عبور مشاة اتحكم عليها سليمة، أحمر = *مشكلة محتملة*، **دهان الحارة بيتلوّن أخضر لما يكون ظاهر وسليم، وأحمر لما يبقى باهت/متآكل**، والـ HUD بيكتب سطر أحمر *MISSING - possible problem* لو الطريق مسفلت ومفيش دهان ظاهر لمدة 3 ثواني متواصلة (من الماضي بس).
 
 ## 7. إزاي نحسّنه
 
@@ -129,7 +154,7 @@ pip install -r requirements.txt
 python scripts/run_video.py my_video.mp4 --weights weights/yolo26s_rdd.pt --out outputs \
        --scene --openvocab --furniture            # --sam للأقنعة، --no-temporal للمقارنة
 python scripts/make_figures.py --results outputs --out docs/images
-python -m pytest -q tests                          # 25 اختبار وحدة (المنطق الزمني، دمج التراكات، المعالم)
+python -m pytest -q tests                          # 28 اختبار وحدة (المنطق الزمني، دمج التراكات، المعالم)
 ```
 
 على Kaggle: `notebooks/03_infer_videos_kaggle.ipynb` (استنتاج)، `01_train_yolo26_kaggle.ipynb` / `04_finetune_yolo26_kaggle.ipynb` (تدريب)، والـ runbook في [docs/KAGGLE_RUNBOOK.md](docs/KAGGLE_RUNBOOK.md).
@@ -141,7 +166,7 @@ roadscan/            detectors.py  tracking.py  temporal.py  furniture.py  surfa
                      mapping.py  vehicles.py  road_mask.py  render.py  export.py  pipeline.py  config.py
 scripts/             run_video.py  benchmark.py  sweep.py  train_yolo.py  prepare_data.py  make_figures.py  make_gallery.py
 notebooks/           01 تدريب · 02 RF-DETR (منافس) · 03 استنتاج · 04 fine-tune (بتتولّد من make_notebooks.py)
-tests/               25 اختبار وحدة
+tests/               28 اختبار وحدة
 results/             المخرجات النهائية لكل فيديو + benchmarks + تاريخ التشغيلات السابقة (results/history)
 docs/                JOURNEY(.ar).md · JETSON.md · KAGGLE_RUNBOOK.md · images/
 ```

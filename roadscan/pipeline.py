@@ -1,6 +1,7 @@
 """End-to-end analysis of one video: detect -> filter -> track -> merge -> render/export."""
 from __future__ import annotations
 
+import math
 import time
 from collections import Counter
 from pathlib import Path
@@ -14,6 +15,7 @@ from .config import Config
 from .detectors import Dets, build_detector
 from .export import track_record, write_furniture, write_outputs, write_scene, write_surface
 from .hardware import StageTimer, collect_hardware, cuda_sync
+from .frames_export import FrameLog
 from .render import VideoSink, draw_box, draw_hud, draw_legend, fill_box, overlay_mask
 from .scene import build_scene_detector, scene_finalize, scene_records
 from .temporal import DisplaySmoother, TemporalPrior, TrackMemory
@@ -22,6 +24,10 @@ from .video_io import iter_frames, probe, timecode
 from .odometry import EgoMotion
 from .mapping import MiniMap, render_map_png, write_points_csv, write_route_csv
 from .vehicles import colour_name, vehicle_rows
+
+
+def _box_r(b) -> list[float]:
+    return [round(float(v), 1) for v in b]
 
 
 class Analyzer:
@@ -76,12 +82,12 @@ class Analyzer:
         timer = StageTimer()
         import copy as _copy
         xw = _copy.deepcopy(cfg.track)
-        xw.track_high_thresh, xw.track_low_thresh, xw.new_track_thresh, xw.track_buffer = 0.30, 0.15, 0.35, 30
+        xw.track_high_thresh, xw.track_low_thresh, xw.new_track_thresh, xw.track_buffer = 0.30, 0.15, 0.35, max(8, 30 // max(int(cfg.stride), 1))
         xo = _copy.deepcopy(cfg.track)
-        xo.track_high_thresh, xo.track_low_thresh, xo.new_track_thresh, xo.track_buffer = 0.16, 0.08, 0.16, 30
+        xo.track_high_thresh, xo.track_low_thresh, xo.new_track_thresh, xo.track_buffer = 0.16, 0.08, 0.16, max(8, 30 // max(int(cfg.stride), 1))
         water_tracker = DefectTracker(xw) if self.surface is not None else None
         ov_tracker = DefectTracker(xo) if self.openvocab is not None else None
-        fps_ = info.fps_avg or info.fps_nominal or 25.0
+        fps_ = (info.fps_avg or info.fps_nominal or 25.0) / max(int(cfg.stride), 1)   # rate the models actually see
         ego = (EgoMotion(cfg.odometry, info.width, info.height, fps=fps_, tcfg=cfg.temporal)
                if cfg.odometry.enabled else None)
         tc = cfg.temporal
@@ -296,6 +302,7 @@ class Analyzer:
         smoother = DisplaySmoother(rc.box_alpha, rc.hold_frames)
         nomark_s, missing_frames = 0.0, 0
         legend = self._legend_entries(final, segments)
+        flog = FrameLog(out_dir, rc.save_frames == "all", rc.frame_jpeg_quality) if rc.save_frames in ("all", "data") else None
         for fr in iter_frames(video):
             if fr.idx > last_idx:       # honour --max-frames: never draw stale boxes past the processed range
                 break
@@ -407,6 +414,41 @@ class Analyzer:
                     draw_legend(canvas, legend, cfg.render)
                 if minimap is not None:
                     minimap.draw(canvas, fr.idx)
+            if flog is not None and fr.idx in frame_log:   # one record per *analysed* frame (stride-aware)
+                spd, pose = None, None
+                if len(speeds) and len(pose_frames):
+                    pj = min(int(np.searchsorted(pose_frames, fr.idx)), len(speeds) - 1)
+                    spd, pose = float(speeds[pj]), ego.poses[pj]
+                d_rows = []
+                for fid, box, conf in draw_items:
+                    tt = by_id[fid]
+                    d_rows.append({"track_id": fid, "class": "pothole+water" if (tt.cls_name == "pothole" and tt.water_filled) else tt.cls_name,
+                                   "confidence": round(float(conf), 3), "box": _box_r(box), "cls_id": int(tt.cls)})
+                u_rows = []
+                for tid, xyxy, conf, _c in last_slog:
+                    sid = (scene_map or {}).get(tid)
+                    if sid is not None:
+                        u_rows.append({"track_id": sid, "class": scene_by_id[sid].cls_name,
+                                       "confidence": round(float(conf), 3), "box": _box_r(xyxy)})
+                f_rows = [{"track_id": tid, "kind": kind, "label": label, "flagged": bool(flagged), "box": _box_r(xyxy)}
+                          for tid, xyxy, kind, label, flagged, bad in last_fur[0]]
+                clean = None
+                if flog.save_images:    # the ORIGINAL frame + boxes only (no HUD / legend / map / tint): what a downstream consumer sees
+                    clean = img.copy()
+                    for u in u_rows:
+                        draw_box(clean, u["box"], f"{u['class']} V{u['track_id']}", (170, 150, 110), self._thin(cfg.render))
+                    for f_ in f_rows:
+                        draw_box(clean, f_["box"], f_["label"] + (" ?" if f_["flagged"] else ""),
+                                 (60, 60, 235) if f_["flagged"] else (90, 190, 90), self._thin(cfg.render))
+                    for d_ in d_rows:
+                        draw_box(clean, d_["box"], f"#{d_['track_id']} {d_['class']} {d_['confidence']:.2f}",
+                                 color_for(d_["cls_id"]), cfg.render)
+                flog.add(fr.idx, fr.pts, clean,
+                         surface=(seg_now or {}).get("surface", ""), sidewalk=(seg_now or {}).get("sidewalk", ""),
+                         marking=mk_now, paint_missing=mark_missing, speed_kmh=spd, pose=pose, defects=d_rows,
+                         road_users=u_rows, furniture=f_rows,
+                         unique_so_far=int(np.searchsorted(first_at, fr.idx, side="right")),
+                         detector_ran=True, furniture_ran=fr.idx in self._fur_log)
             if sink is not None:
                 sink.write(canvas)
 
@@ -433,17 +475,46 @@ class Analyzer:
         self._missing_marking_s = missing_frames / max(info.fps_avg or info.fps_nominal or 25.0, 1.0)
         if sink is not None:
             sink.close()
+        if flog is not None:
+            run_info["frames_export"] = flog.close()
         for t in final:  # safety net: never silently lose a reported defect
             if t.track_id not in records:
                 records[t.track_id] = track_record(t, "", "", frame_area, None)
         return [records[k] for k in sorted(records)], veh_colors
 
     # ---------------------------------------------------------------- public
-    def run(self, video_path: str | Path, out_root: str | Path) -> dict[str, Any]:
+    def _set_rate(self, info) -> dict[str, Any]:
+        """Pick the analysis stride from `target_fps` and rescale every frame-count parameter to it (Jetson mode)."""
+        import copy as _copy
+        if not hasattr(self, "_base_cfg"):
+            self._base_cfg = _copy.deepcopy(self.cfg)
+        base, cfg = self._base_cfg, self.cfg
+        vfps = info.fps_avg or info.fps_nominal or 25.0
+        # stride so that the models see AT MOST target_fps (never faster than the device budget)
+        s = max(1, int(math.ceil(vfps / cfg.target_fps - 0.05))) if cfg.target_fps > 0 else max(int(base.stride), 1)
+        cfg.stride = s
+        cfg.track.track_buffer = max(8, int(round(base.track.track_buffer / s)))
+        cfg.merge.max_gap_frames = max(8, int(round(base.merge.max_gap_frames / s)))
+        cfg.temporal.coast_frames = max(1, int(round(base.temporal.coast_frames / s)))
+        cfg.surface.every_n = base.surface.every_n * s          # keep each heavy model's cadence in *analysed* frames
+        cfg.furniture.every_n = base.furniture.every_n * s
+        cfg.openvocab.every_n = base.openvocab.every_n * s
+        # a defect that is on screen for the same *time* must still be reported: the "seen in >= N frames" rules are
+        # written for the full-rate run, so convert them to the analysed rate (never below 2 = one confirmation)
+        def _obs(v: int) -> int:
+            return int(v) if (s == 1 or int(v) < 2) else max(2, int(math.ceil(int(v) / s)))
+        cfg.report.min_observations = _obs(base.report.min_observations)
+        cfg.report.class_min_obs = {k: _obs(v) for k, v in base.report.class_min_obs.items()}
+        return {"video_fps": round(vfps, 3), "stride": s, "analysis_fps": round(vfps / s, 3),
+                "target_fps": cfg.target_fps}
+
+    def run(self, video_path: str | Path, out_root: str | Path, name: str | None = None) -> dict[str, Any]:
         video = Path(video_path)
-        out_dir = Path(out_root) / video.stem.replace(" ", "_")
+        out_dir = Path(out_root) / (name or video.stem.replace(" ", "_"))
         out_dir.mkdir(parents=True, exist_ok=True)
         info = probe(video)
+        rate = self._set_rate(info)
+        self.log(f"[{video.name}] analysis rate: every {rate['stride']} frame(s) = {rate['analysis_fps']} FPS of {rate['video_fps']} FPS")
         self.log(f"[{video.name}] {info.width}x{info.height}, {info.frame_count} frames, "
                  f"{info.duration_s:.1f}s, nominal {info.fps_nominal:.2f} fps, avg {info.fps_avg:.2f} fps"
                  f"{' (variable frame rate)' if info.is_vfr else ''}")
@@ -495,6 +566,7 @@ class Analyzer:
             "video": video.name,
             "video_info": info.__dict__,
             "frames_processed": n_frames,
+            "analysis_rate": rate,
             "stride": self.cfg.stride,
             "timing": {
                 "processing_fps": round(n_frames / model_s, 2) if model_s > 0 else None,

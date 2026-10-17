@@ -82,25 +82,22 @@ def render_map_png(path: Path, route: np.ndarray, route_surface: Sequence[str], 
 
 
 class MiniMap:
-    """Small live map drawn into a corner of the annotated video."""
+    """Small live map drawn into a corner of the annotated video - strictly CAUSAL (what a real-time system knows).
 
-    def __init__(self, ego, markers: Sequence[dict[str, Any]], size: int = 190, margin: int = 8):
+    It only uses poses up to the current frame: a fixed-scale window centred on the vehicle shows the recent trail
+    (last `trail_m` metres, the part the system still remembers) and the defects seen so far. The rest of the route
+    (future, or the whole run from the start) is never drawn and the scale never depends on the future.
+    The whole-route picture `route_map.png` is a post-run summary for the report, not part of the live view.
+    """
+
+    def __init__(self, ego, markers: Sequence[dict[str, Any]], size: int = 190, margin: int = 8,
+                 window_m: float = 60.0, trail_m: float = 120.0):
         self.size, self.margin = size, margin
         self.frames = np.array([p.frame for p in ego.poses])
         self.xy = ego.route()
+        self.dist = np.array([p.dist_m for p in ego.poses])
         self.markers = sorted(markers, key=lambda m: m["frame"])
-        pts = self.xy if len(self.xy) else np.zeros((1, 2))
-        allp = np.vstack([pts] + ([np.array([[m["x_m"], m["y_m"]] for m in markers])] if markers else []))
-        lo, hi = allp.min(0), allp.max(0)
-        span = float(max((hi - lo).max(), 20.0))
-        centre = (lo + hi) / 2
-        self.lo = centre - span / 2 * 1.12
-        self.span = span * 1.12
-
-    def _px(self, xy) -> tuple[int, int]:
-        u = (xy[0] - self.lo[0]) / self.span
-        v = 1.0 - (xy[1] - self.lo[1]) / self.span
-        return int(8 + u * (self.size - 16)), int(8 + v * (self.size - 16))
+        self.window_m, self.trail_m = float(window_m), float(trail_m)
 
     def draw(self, canvas: np.ndarray, frame_idx: int) -> None:
         if len(self.xy) < 2:
@@ -108,18 +105,26 @@ class MiniMap:
         H, W = canvas.shape[:2]
         s = self.size
         x0, y0 = W - s - self.margin, H - s - self.margin
-        tile = (canvas[y0:y0 + s, x0:x0 + s] * 0.30).astype(np.uint8)
-        k = int(np.searchsorted(self.frames, frame_idx, side="right"))
+        k = int(np.searchsorted(self.frames, frame_idx, side="right"))     # poses up to NOW only
         k = max(2, min(k, len(self.xy)))
-        pts = np.array([self._px(p) for p in self.xy[:k]], np.int32)
-        full = np.array([self._px(p) for p in self.xy], np.int32)
-        cv2.polylines(tile, [full], False, (90, 90, 90), 1, cv2.LINE_AA)
-        cv2.polylines(tile, [pts], False, (255, 255, 255), 2, cv2.LINE_AA)
+        past = self.xy[:k]
+        cur = past[-1]
+        keep = self.dist[:k] >= self.dist[k - 1] - self.trail_m              # the remembered trail
+        trail = past[keep]
+        scale = (s - 16) / self.window_m                                     # px per metre, fixed
+
+        def px(xy):
+            return int(s / 2 + (xy[0] - cur[0]) * scale), int(s / 2 - (xy[1] - cur[1]) * scale)
+
+        tile = (canvas[y0:y0 + s, x0:x0 + s] * 0.30).astype(np.uint8)
+        cv2.polylines(tile, [np.array([px(p) for p in trail], np.int32)], False, (255, 255, 255), 2, cv2.LINE_AA)
         for m in self.markers:
             if m["frame"] > frame_idx:
                 break
-            cv2.circle(tile, self._px((m["x_m"], m["y_m"])), 3, m["color"], -1, cv2.LINE_AA)
-        cv2.circle(tile, tuple(pts[-1]), 4, (0, 255, 255), -1, cv2.LINE_AA)
-        cv2.putText(tile, "route map (approx.)", (5, 12), cv2.FONT_HERSHEY_SIMPLEX, 0.36, (255, 255, 255), 1, cv2.LINE_AA)
+            u, v = px((m["x_m"], m["y_m"]))
+            if 0 <= u < s and 0 <= v < s:
+                cv2.circle(tile, (u, v), 3, m["color"], -1, cv2.LINE_AA)
+        cv2.circle(tile, (s // 2, s // 2), 4, (0, 255, 255), -1, cv2.LINE_AA)
+        cv2.putText(tile, "live map: past only", (5, 12), cv2.FONT_HERSHEY_SIMPLEX, 0.36, (255, 255, 255), 1, cv2.LINE_AA)
         cv2.rectangle(tile, (0, 0), (s - 1, s - 1), (200, 200, 200), 1)
         canvas[y0:y0 + s, x0:x0 + s] = tile

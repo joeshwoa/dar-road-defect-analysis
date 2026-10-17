@@ -59,3 +59,20 @@ loop above is simpler to maintain and is what we benchmark.
 2. Compare `defects.csv` against the Kaggle run: the number of unique defects should match within a small margin; a large
    change means the INT8 calibration or a pre-processing difference is hurting.
 3. Log `jtop` power/thermal state: sustained FPS on a hot, power-limited Jetson can be lower than a cold benchmark.
+
+## Frame rate on the device: cap the rate, do not just "analyse 10 FPS"
+
+A dashcam delivers 25-36 FPS. Many defects are on screen for only a fraction of a second (median ~0.3 s on clipA at full rate),
+so the analysis rate is a trade-off we **measured** instead of assuming (`scripts/compare_modes.py`, table in the README):
+
+* `--deploy-fps 24,18,12` runs the same code at frame-rate *caps*: `target_fps` picks the smallest stride whose rate stays under
+  the cap and rescales every frame-count parameter (tracker buffer, merge gap, coast frames, heavy-model cadence and the
+  "seen in >= N frames" report rule) to the analysed rate.
+* A first test with a 10 FPS cap (stride 4 on clipA) kept every defect it reported (precision ~100 %) but found only about a fifth
+  of clipA's reference defects (11 of 53) and about half of clipB's (55 of 102): too few observations per defect to confirm it.
+  Lesson: **do not cut the detector + tracker rate; cut the heavy models instead.**
+* On the device: run the TensorRT detector and the tracker at the highest rate its latency allows
+  (`rate <= 1 / latency of the slowest stage that runs every analysed frame`), road mask every 3-5 frames, and keep the heavy
+  optional models (open-vocabulary, Mask2Former, SAM) on a slower cadence (`every_n`) or off.
+* Use `python scripts/run_video.py clip.mp4 --weights yolo26s_rdd.pt --deploy-fps 18` to reproduce the Jetson-mode run and
+  `python scripts/compare_modes.py results` to compare it with the reference. We did not measure on a Jetson.

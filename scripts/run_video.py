@@ -46,6 +46,12 @@ def main() -> None:
     ap.add_argument("--cam-height", type=float, help="assumed camera height in metres for the route map (default 1.4)")
     ap.add_argument("--hfov", type=float, help="assumed horizontal field of view in degrees (default 75)")
     ap.add_argument("--no-video", action="store_true", help="skip rendering the annotated video")
+    ap.add_argument("--deploy-fps", default="24,18,12",
+                    help="after the full-rate reference run, repeat the analysis at each of these frame-rate caps (comma list; Jetson mode: the "
+                         "models see AT MOST this many FPS; writes <clip>/jetson_<N>fps/ with per-frame records + clean frames); 0 = skip")
+    ap.add_argument("--deploy-only", action="store_true",
+                    help="skip the reference run (reuse an existing <out>/<clip>/ folder) and only produce the Jetson-mode profiles")
+    ap.add_argument("--set", action="append", default=[], metavar="KEY=VAL", help="override any config key, e.g. track.tracker=bytetrack")
     ap.add_argument("--set", action="append", default=[], metavar="KEY=VAL", help="override any config key, e.g. track.tracker=bytetrack")
     a = ap.parse_args()
 
@@ -84,7 +90,11 @@ def main() -> None:
     names = a.names or (DEFECT_NAMES if cfg.detect.backend == "rfdetr" else None)
     an = Analyzer(cfg, class_names=names)
     summary = {}
+    deploy_only = a.deploy_only or (Path(__file__).resolve().parent / "deploy_only.flag").exists()
     for v in a.videos:
+        if deploy_only:
+            summary[Path(v).name] = {"out_dir": str(Path(a.out) / Path(v).stem.replace(" ", "_")), "reference": "reused"}
+            continue
         res = an.run(v, a.out)
         summary[Path(v).name] = {
             "unique_defects": len(res["records"]),
@@ -92,6 +102,29 @@ def main() -> None:
             "end_to_end_fps_pass1": res["run_info"]["timing"]["end_to_end_fps_pass1"],
             "out_dir": res["out_dir"],
         }
+    rates = [float(x) for x in str(a.deploy_fps).split(",") if x.strip() and float(x) > 0]
+    for fps in rates:
+        an.cfg.target_fps = fps
+        an.cfg.render.enabled = False              # the annotated video of the reference run is the visual deliverable
+        an.cfg.render.save_frames = "all"          # per-frame records + clean original frames with boxes
+        for v in a.videos:
+            ref_dir = Path(summary[Path(v).name]["out_dir"])
+            res = an.run(v, ref_dir, name=f"jetson_{fps:g}fps")
+            summary[Path(v).name].setdefault("deploy", {})[f"{fps:g}"] = {
+                "analysis_rate": res["run_info"].get("analysis_rate"),
+                "unique_defects": len(res["records"]),
+                "processing_fps": res["run_info"]["timing"]["processing_fps"],
+                "end_to_end_fps_pass1": res["run_info"]["timing"]["end_to_end_fps_pass1"],
+                "out_dir": res["out_dir"],
+            }
+    if deploy_only:      # keep the notebook's summary cell working: the reused reference folder has no files of its own here
+        import shutil
+        for v in a.videos:
+            d = Path(summary[Path(v).name]["out_dir"])
+            last = sorted(d.glob("jetson_*fps"))[:1]
+            if last and not (d / "run_info.json").exists():
+                for f in ("run_info.json", "defects.csv"):
+                    shutil.copy(last[0] / f, d / f)
     print(json.dumps(summary, indent=2))
 
 

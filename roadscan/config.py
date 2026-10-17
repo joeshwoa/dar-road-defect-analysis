@@ -200,6 +200,8 @@ class RenderCfg:
     tint_water: bool = False            # standing water already has its own defect box; the extra blue tint confuses
     marking_overlay: str = "all"        # off | worn | all: lane-paint overlay (green = fine, red = worn/faded)
     missing_marking_s: float = 3.0      # paved road with no visible paint for this long (past only) -> flagged
+    save_frames: str = "data"          # all (per-frame json+csv + CLEAN original frames with boxes) | data (json+csv only) | off
+    frame_jpeg_quality: int = 75
     furniture_labels: str = "flagged"   # none | flagged | all: text on signs / lights (thin boxes are always drawn)
 
 
@@ -219,6 +221,7 @@ class Config:
     temporal: TemporalCfg = field(default_factory=TemporalCfg)
     render: RenderCfg = field(default_factory=RenderCfg)
     stride: int = 1                     # process every Nth frame (speed knob, e.g. on Jetson)
+    target_fps: float = 0.0             # >0: choose the stride per video so the models see ~this rate (Jetson mode)
     max_frames: int = 0                 # 0 = whole video
 
     # ---- io helpers -------------------------------------------------------
